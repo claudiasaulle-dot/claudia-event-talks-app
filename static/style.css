@@ -42,6 +42,96 @@
     --radius-full: 9999px;
 }
 
+body.light-mode {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-card: #f1f5f9;
+    --bg-card-hover: #e2e8f0;
+    --bg-card-selected: #dbeafe;
+    
+    --border-color: rgba(15, 23, 42, 0.08);
+    --border-color-hover: rgba(59, 130, 246, 0.4);
+    --border-color-selected: #2563eb;
+    
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    
+    --accent-blue: #2563eb;
+    --accent-blue-hover: #1d4ed8;
+    --accent-blue-glow: rgba(37, 99, 235, 0.15);
+    
+    --color-feature-bg: rgba(16, 185, 129, 0.15);
+    --color-change-bg: rgba(14, 165, 233, 0.15);
+    --color-deprecation-bg: rgba(239, 68, 68, 0.15);
+    --color-general-bg: rgba(168, 85, 247, 0.15);
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
+    --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.1);
+}
+
+/* Light mode specific element adjustments */
+body.light-mode .bg-gradient-decoration {
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, rgba(139, 92, 246, 0.02) 50%, rgba(0,0,0,0) 100%);
+}
+body.light-mode .search-box,
+body.light-mode .textarea-wrapper {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+body.light-mode .selected-note-preview {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+body.light-mode .composer-header {
+    background-color: rgba(0, 0, 0, 0.01);
+}
+body.light-mode .empty-icon-wrapper {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+body.light-mode .card-body code {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #0f172a;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-mode .logo-text h1,
+body.light-mode .composer-header h2 {
+    background: linear-gradient(to right, #0f172a, #475569);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+body.light-mode .composer-header h2 i {
+    color: #0f172a;
+    -webkit-text-fill-color: initial;
+}
+body.light-mode .btn-twitter {
+    background-color: #0f172a;
+    border: 1px solid #0f172a;
+    color: #f8fafc;
+}
+body.light-mode .btn-twitter:hover {
+    background-color: #1e293b;
+    border-color: #1e293b;
+}
+body.light-mode .empty-state h3,
+body.light-mode .composer-card h2,
+body.light-mode .textarea-label {
+    color: #0f172a;
+}
+body.light-mode .status-msg {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+body.light-mode .filter-btn {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+body.light-mode .filter-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
+}
+body.light-mode .filter-btn.active {
+    color: white;
+}
+
 /* ==========================================================================
    Base resets & typography
    ========================================================================== */

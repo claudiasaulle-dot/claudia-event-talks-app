@@ -27,7 +27,8 @@ const elements = {
     composerWarning: document.getElementById('composer-warning'),
     copyTweetBtn: document.getElementById('copy-tweet-btn'),
     shareTweetBtn: document.getElementById('share-tweet-btn'),
-    exportCsvBtn: document.getElementById('export-csv-btn')
+    exportCsvBtn: document.getElementById('export-csv-btn'),
+    themeToggleBtn: document.getElementById('theme-toggle-btn')
 };
 
 // ==========================================================================
@@ -85,6 +86,16 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Export to CSV event
     elements.exportCsvBtn.addEventListener('click', exportToCSV);
+    
+    // Theme toggle event
+    elements.themeToggleBtn.addEventListener('click', toggleTheme);
+    
+    // Initialize Theme from localStorage
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        updateThemeIcon('light');
+    }
 });
 
 // ==========================================================================
@@ -506,5 +517,24 @@ function exportToCSV() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+}
+
+// ==========================================================================
+// Theme Toggling Utilities
+// ==========================================================================
+function toggleTheme() {
+    const isLight = document.body.classList.toggle('light-mode');
+    const theme = isLight ? 'light' : 'dark';
+    localStorage.setItem('theme', theme);
+    updateThemeIcon(theme);
+}
+
+function updateThemeIcon(theme) {
+    const icon = elements.themeToggleBtn.querySelector('i');
+    if (theme === 'light') {
+        icon.className = 'fa-solid fa-sun';
+    } else {
+        icon.className = 'fa-solid fa-moon';
+    }
 }
 
