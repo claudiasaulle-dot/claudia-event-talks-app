@@ -26,7 +26,8 @@ const elements = {
     counterProgressRing: document.getElementById('counter-progress-ring'),
     composerWarning: document.getElementById('composer-warning'),
     copyTweetBtn: document.getElementById('copy-tweet-btn'),
-    shareTweetBtn: document.getElementById('share-tweet-btn')
+    shareTweetBtn: document.getElementById('share-tweet-btn'),
+    exportCsvBtn: document.getElementById('export-csv-btn')
 };
 
 // ==========================================================================
@@ -81,6 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Share on Twitter Web Intent
     elements.shareTweetBtn.addEventListener('click', shareOnTwitter);
+    
+    // Export to CSV event
+    elements.exportCsvBtn.addEventListener('click', exportToCSV);
 });
 
 // ==========================================================================
@@ -221,9 +225,14 @@ function renderReleasesList() {
                 <a href="${release.link}" class="source-link" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i> Original release notes
                 </a>
-                <span class="action-trigger">
-                    <i class="fa-brands fa-x-twitter"></i> Select to Tweet
-                </span>
+                <div class="card-actions-wrapper">
+                    <button class="btn-card-utility copy-card-btn" title="Copia contenuto negli appunti" onclick="event.stopPropagation(); copyCardText(this, '${release.id}')">
+                        <i class="fa-regular fa-copy"></i> Copia
+                    </button>
+                    <span class="action-trigger">
+                        <i class="fa-brands fa-x-twitter"></i> Select to Tweet
+                    </span>
+                </div>
             </div>
         `;
         
@@ -437,3 +446,65 @@ function shareOnTwitter() {
     const twitterIntentURL = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
     window.open(twitterIntentURL, '_blank', 'noopener,noreferrer');
 }
+
+// ==========================================================================
+// Card Clipboard & CSV Export Utilities
+// ==========================================================================
+function copyCardText(buttonElement, releaseId) {
+    const release = releases.find(r => r.id === releaseId);
+    if (!release) return;
+    
+    navigator.clipboard.writeText(release.content_text).then(() => {
+        // Temporarily change button visual layout to show success
+        const originalHTML = buttonElement.innerHTML;
+        buttonElement.innerHTML = '<i class="fa-solid fa-check text-success"></i> Copiato!';
+        buttonElement.classList.add('success');
+        buttonElement.disabled = true;
+        
+        setTimeout(() => {
+            buttonElement.innerHTML = originalHTML;
+            buttonElement.classList.remove('success');
+            buttonElement.disabled = false;
+        }, 2000);
+    }).catch(err => {
+        console.error("Failed to copy card text:", err);
+        alert("Impossibile copiare il testo automaticamente. Seleziona e copia manualmente.");
+    });
+}
+
+function exportToCSV() {
+    if (filteredReleases.length === 0) {
+        alert("Nessun dato da esportare.");
+        return;
+    }
+    
+    // Headers for CSV file
+    const headers = ["ID", "Date", "Category", "Content Text", "Link"];
+    
+    // Convert release list to CSV rows (escaping quotes)
+    const rows = filteredReleases.map(release => [
+        `"${release.id.replace(/"/g, '""')}"`,
+        `"${release.date.replace(/"/g, '""')}"`,
+        `"${release.category.replace(/"/g, '""')}"`,
+        `"${release.content_text.replace(/"/g, '""')}"`,
+        `"${release.link.replace(/"/g, '""')}"`
+    ]);
+    
+    // Combine header and rows with UTF-8 BOM for Excel compatibility
+    const csvContent = "\uFEFF" + [
+        headers.join(","),
+        ...rows.map(e => e.join(","))
+    ].join("\n");
+    
+    // Create download trigger
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `bigquery_releases_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
